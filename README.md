@@ -26,7 +26,7 @@ Our work highlights the value of deep learning in automating and improving the d
 
 ## 🏗️ Model Architecture
 
-![Model Architecture Placeholder](media/dl_model.png)
+![Model Architecture Placeholder](media/pipeline.png)
 
 > *Note: Figure shows a placeholder representation of the deep learning architecture.*
 
@@ -92,11 +92,13 @@ Host meluxina
   User u102575
   Port 8822
   IdentityFile ~/.ssh/id_ed25519_mel
-bash
-Copy
-Edit
+  IdentitiesOnly yes
+  ForwardAgent no
+```
 # Connect
+```bash
 ssh meluxina
+```
 
 ## 🚀 Benefits of MeluXina
 
@@ -110,7 +112,7 @@ ssh meluxina
 ## 🧪 Neural Network Training
 
 - **Loss Function**: Cross-Entropy  
-- **Optimizer**: Adam  
+- **Optimizer**: Adam + Stochastic Gradient Descent  
 - **Normalization**: BatchNorm (replacing InstanceNorm from original study)  
 - **Regularization**: Dropout + Weight Decay  
 - **Strategy**: Early stopping to prevent overfitting  
