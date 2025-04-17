@@ -143,6 +143,7 @@ Expected outcomes based on Liu et al.:
 
 
 ## 📂 Project Structure
+```bash
 ├── model.py                 # Model pipeline code
 ├── dataset.py               # Dataset preparation
 ├── train.py                 # Main training script
@@ -154,6 +155,7 @@ Expected outcomes based on Liu et al.:
 │   ├── MCI.png
 │   └── AD.png
 └── README.md
+```
 
 ##🙏 Acknowledgements
 - **Liu et al.** for their foundational model and research
@@ -165,11 +167,13 @@ Expected outcomes based on Liu et al.:
 - **MOX Lab @ Politecnico di Milano** for support and guidance
 
 ## 📬 Contacts
+```bash
 ├── **Vittorio Pio Remigio Cozzoli**, Student, Politecnico di Milano
 │     ├── vittoriopio.cozzoli@mail.polimi.it
 ├── **Tommaso Crippa**, Student, Politecnico di Milano
 │     ├── tommaso2.crippa@mail.polimi.it
 ├── **Alberto Taddei**, Student, Politecnico di Milano
 │     ├── alberto4.taddei@mail.polimi.it
+```
 
 
