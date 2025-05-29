@@ -9,9 +9,11 @@ from tqdm import tqdm
 
 # TODO use argparse for dynamic set
 
-SCANS_DIR = "/path/to/scans"  
-TRAIN_TSV = "/path/to/train.tsv"  
-VAL_TSV = "/path/to/val.tsv" 
+SCANS_DIR = "../ADNI_processed"  # Path to the directory containing the scans
+#TRAIN_TSV = "../vitto/Train_50.tsv"
+TRAIN_TSV = "./participants_Train50_updated.tsv" # new path for training data 
+#VAL_TSV = "../vitto/Val_50.tsv"
+VAL_TSV = "./participants_Val50_updated.tsv" # new path for validation data
 
 # Training params
 NUM_CLASSES = 3
@@ -95,6 +97,8 @@ def main():
             best_val_acc = val_acc
             torch.save(model.state_dict(), 'best_model.pth')
             print('Saved new best model!')
+
+    print('Training complete. Best validation accuracy:', best_val_acc)
 
 if __name__ == '__main__':
     main() 

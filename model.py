@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Simple3DCNN(nn.Module):
+class ClassifierCNN(nn.Module):
     def __init__(self, in_channels=1, num_classes=3):
-        super(Simple3DCNN, self).__init__()
+        super(ClassifierCNN, self).__init__()
         
         self.conv1 = nn.Conv3d(in_channels, 32, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm3d(32)
@@ -18,11 +18,12 @@ class Simple3DCNN(nn.Module):
         self.bn3 = nn.BatchNorm3d(128)
         self.pool3 = nn.MaxPool3d(kernel_size=2, stride=2)
 
-        self.fc1 = nn.Linear(128 * 12 * 12 * 12, 512)
+        self.fc1 = nn.Linear(128 * 15 * 18 * 15, 512)
         self.dropout = nn.Dropout(0.5)
         self.fc2 = nn.Linear(512, num_classes)
         
     def forward(self, x):
+
         x = self.pool1(F.relu(self.bn1(self.conv1(x))))
         x = self.pool2(F.relu(self.bn2(self.conv2(x))))
         x = self.pool3(F.relu(self.bn3(self.conv3(x))))
