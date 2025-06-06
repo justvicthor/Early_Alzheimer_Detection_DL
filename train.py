@@ -6,20 +6,50 @@ from dataset import ADNIDataset
 from model import ClassifierCNN
 import os
 from tqdm import tqdm
+import numpy as np
+from torch.utils.data import WeightedRandomSampler
+import csv
+
 
 # TODO use argparse for dynamic set
 
+# Possible improvements:
+# 1. Model Architecture Adjustments
+# InstanceNorm3d instead of BatchNorm3d | Smaller kernel/stride in the initial layer | Wider, fewer layers
+
+# 2. Data Augmentation
+# Random crop to 96×96×96 and Gaussian blur in your dataset class.
+
+# 3. Solve class imbalance
+# Use WeightedRandomSampler or pass class weights to CrossEntropyLoss
+
 SCANS_DIR = "../ADNI_processed"  # Path to the directory containing the scans
 #TRAIN_TSV = "../vitto/Train_50.tsv"
-TRAIN_TSV = "./participants_Train50_updated.tsv" # new path for training data 
+TRAIN_TSV = "./participants_Train50.tsv" # new path for training data 
 #VAL_TSV = "../vitto/Val_50.tsv"
-VAL_TSV = "./participants_Val50_updated.tsv" # new path for validation data
+VAL_TSV = "./participants_Val50.tsv" # new path for validation data
 
 # Training params
 NUM_CLASSES = 3
-BATCH_SIZE = 4
-NUM_EPOCHS = 50
+BATCH_SIZE = 16
+NUM_EPOCHS = 100
 LEARNING_RATE = 0.001
+
+
+# Solve class imbalance
+def get_sample_weights(dataset):
+    labels = []
+    for i in range(len(dataset)):
+        # dataset[i] returns (image, label)
+        _, label = dataset[i]
+        labels.append(label)
+    labels = np.array(labels)
+    class_sample_count = np.array([np.sum(labels == t) for t in np.unique(labels)])
+    weight_per_class = 1. / class_sample_count
+    sample_weights = weight_per_class[labels]
+    return sample_weights
+
+
 
 def train(model, train_loader, criterion, optimizer, device):
     model.train()
@@ -74,17 +104,30 @@ def main():
     train_dataset = ADNIDataset(SCANS_DIR, TRAIN_TSV, mode='train', num_classes=NUM_CLASSES)
     val_dataset = ADNIDataset(SCANS_DIR, VAL_TSV, mode='val', num_classes=NUM_CLASSES)
     
+    # # Solve class imbalance
+    # sample_weights = get_sample_weights(train_dataset)
+    # sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(sample_weights), replacement=True)
+    
+    # train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=4)
+    # val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
+    
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
     
 
     model = ClassifierCNN(num_classes=NUM_CLASSES).to(device)
-    
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
     
-    # training!
-    best_val_acc = 0
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    # SGD optimizer
+    # optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
+    
+    best_val_loss = float("+inf")
+
+    csvfile = open('training_log.csv', mode='w', newline='')
+    writer = csv.writer(csvfile)
+    writer.writerow(['epoch', 'train_loss', 'train_acc', 'val_loss', 'val_acc'])
+
     for epoch in range(NUM_EPOCHS):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc = validate(model, val_loader, criterion, device)
@@ -93,12 +136,17 @@ def main():
         print(f'Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}%')
         print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%')
         
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
+        writer.writerow([epoch+1, train_loss, train_acc, val_loss, val_acc])
+        csvfile.flush()
+        
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             torch.save(model.state_dict(), 'best_model.pth')
             print('Saved new best model!')
 
-    print('Training complete. Best validation accuracy:', best_val_acc)
+    csvfile.close()
+    print('Training complete. Best validation loss:', best_val_loss)
+
 
 if __name__ == '__main__':
     main() 
