@@ -4,6 +4,7 @@ import numpy as np
 import nibabel as nib
 from torch.utils.data import Dataset
 import pandas as pd
+import scipy.ndimage
 
 class ADNIDataset(Dataset):
     def __init__(self, scans_dir, tsv_path, mode='train', num_classes=3):
@@ -32,10 +33,8 @@ class ADNIDataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, idx):
-
         try:
             row = self.df.iloc[idx]
-            
             scan_path = os.path.join(self.scans_dir,
                                    "subjects",
                                    row['participant_id'],
@@ -46,13 +45,12 @@ class ADNIDataset(Dataset):
                 raise FileNotFoundError(f"Missing scan path for idx {idx}: {scan_path}")
 
             scan_files = [f for f in os.listdir(scan_path) if 'Space_T1w' in f]
-            
+
             if not scan_files:
                 raise FileNotFoundError(f"No scan file in {scan_path}")
 
             scan_file = scan_files[0]
             scan_path_full = os.path.join(scan_path, scan_file)
-
 
             try:
                 image = nib.load(scan_path_full).get_fdata()
@@ -62,9 +60,16 @@ class ADNIDataset(Dataset):
             image = np.nan_to_num(image)
             image = (image - image.min()) / (image.max() - image.min() + 1e-6)
 
+            # Random Gaussian Blurring (Data Augmentation)
+            if self.mode == 'train':
+                if np.random.rand() < 0.5: 
+                    sigma = np.random.uniform(0, 1.5)
+                    image = scipy.ndimage.gaussian_filter(image, sigma=sigma)
+
             image = torch.FloatTensor(image).unsqueeze(0)
 
             label = self.label_map[row['diagnosis']]
+
 
             return image, label
 
