@@ -8,6 +8,7 @@ import os
 from tqdm import tqdm
 import numpy as np
 from torch.utils.data import WeightedRandomSampler
+from sklearn.metrics import roc_auc_score
 import csv
 
 
@@ -81,22 +82,38 @@ def validate(model, val_loader, criterion, device):
     running_loss = 0.0
     correct = 0
     total = 0
-    
+    all_labels = []
+    all_probs = []
+
     with torch.no_grad():
         for images, labels in tqdm(val_loader, desc='Validating'):
             if images is None or labels is None:
                 continue
-                
+
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
-            
+
             running_loss += loss.item()
             _, predicted = outputs.max(1)
             total += labels.size(0)
             correct += predicted.eq(labels).sum().item()
+
+            all_labels.extend(labels.cpu().numpy())
+            all_probs.extend(torch.softmax(outputs, dim=1).cpu().numpy())
+
+
+    loss = running_loss / len(val_loader)
+    acc = (correct / total) * 100
     
-    return running_loss / len(val_loader), 100. * correct / total
+    auc = roc_auc_score(
+        all_labels,
+        all_probs,
+        multi_class='ovr',
+        average='macro'
+    )
+
+    return loss, acc, auc
 
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -126,17 +143,18 @@ def main():
 
     csvfile = open('training_log.csv', mode='w', newline='')
     writer = csv.writer(csvfile)
-    writer.writerow(['epoch', 'train_loss', 'train_acc', 'val_loss', 'val_acc'])
+    writer.writerow(['epoch', 'train_loss', 'train_acc', 'val_loss', 'val_acc', 'val_auc'])
 
     for epoch in range(NUM_EPOCHS):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
-        val_loss, val_acc = validate(model, val_loader, criterion, device)
-        
+        val_loss, val_acc, val_auc = validate(model, val_loader, criterion, device)
+
         print(f'Epoch {epoch+1}/{NUM_EPOCHS}:')
         print(f'Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}%')
-        print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%')
+        print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%, Val AUC: {val_auc:.4f}')
+
         
-        writer.writerow([epoch+1, train_loss, train_acc, val_loss, val_acc])
+        writer.writerow([epoch+1, train_loss, train_acc, val_loss, val_acc, val_auc])
         csvfile.flush()
         
         if val_loss < best_val_loss:

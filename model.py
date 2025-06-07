@@ -71,9 +71,8 @@ class ClassifierCNN(nn.Module):
         with torch.no_grad():
             dummy = torch.zeros(1, 1, 120, 144, 120) 
             out = self.conv(dummy)
-            print('Conv output shape:', out.shape)
             flat_dim = out.view(1, -1).size(1)
-            
+
         self.fc6 = nn.Linear(flat_dim, feature_dim)
         self.classifier = nn.Sequential(
             nn.Linear(feature_dim, nhid),
