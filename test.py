@@ -6,7 +6,11 @@ from dataset import ADNIDataset
 from model import ClassifierCNN
 import pandas as pd
 from tqdm import tqdm
+<<<<<<< HEAD
 from sklearn.metrics import roc_auc_score, balanced_accuracy_score
+=======
+from sklearn.metrics import roc_auc_score
+>>>>>>> 5514b1e (Formatted correctly test output .tsv)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='config.yaml')
