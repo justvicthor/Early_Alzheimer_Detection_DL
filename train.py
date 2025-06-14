@@ -1,3 +1,4 @@
+import argparse, yaml
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,27 +15,26 @@ import csv
 
 # TODO use argparse for dynamic set
 
-# Possible improvements:
-# 1. Model Architecture Adjustments
-# InstanceNorm3d instead of BatchNorm3d | Smaller kernel/stride in the initial layer | Wider, fewer layers
 
-# 2. Data Augmentation
-# Random crop to 96×96×96 and Gaussian blur in your dataset class.
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', default='config.yaml')
+cfg_path = parser.parse_args().config        # <-- nome file
+with open(cfg_path, 'r') as f:               # <-- apertura UNA sola volta
+    cfg = yaml.safe_load(f)
 
-# 3. Solve class imbalance
-# Use WeightedRandomSampler or pass class weights to CrossEntropyLoss
-
-SCANS_DIR = "../ADNI_processed"  # Path to the directory containing the scans
-#TRAIN_TSV = "../vitto/Train_50.tsv"
-TRAIN_TSV = "./participants_Train50.tsv" # new path for training data 
-#VAL_TSV = "../vitto/Val_50.tsv"
-VAL_TSV = "./participants_Val50.tsv" # new path for validation data
+SCANS_DIR = cfg['data']['scans_dir']
+TRAIN_TSV = cfg['data']['train_tsv']
+VAL_TSV   = cfg['data']['val_tsv']
 
 # Training params
-NUM_CLASSES = 3
-BATCH_SIZE = 16
-NUM_EPOCHS = 100
-LEARNING_RATE = 0.001
+NUM_CLASSES   = cfg['model']['num_classes']
+BATCH_SIZE    = cfg['data']['batch_size']
+VAL_BATCH_SZ  = cfg['data']['val_batch_size']
+NUM_EPOCHS    = cfg['training']['epochs']
+LEARNING_RATE = cfg['training']['optimizer']['lr']
+CROP_SIZE = cfg['data']['crop_size']
+BLUR_SIGMA = cfg['data']['blur_sigma']
+NUM_WORKERS = cfg['data']['workers']
 
 
 # Solve class imbalance
@@ -68,6 +68,9 @@ def train(model, train_loader, criterion, optimizer, device):
         outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
+        if cfg['training']['gradient_clip'] is not None:
+            torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                        cfg['training']['gradient_clip'])
         optimizer.step()
         
         running_loss += loss.item()
@@ -118,21 +121,35 @@ def validate(model, val_loader, criterion, device):
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    train_dataset = ADNIDataset(SCANS_DIR, TRAIN_TSV, mode='train', num_classes=NUM_CLASSES)
-    val_dataset = ADNIDataset(SCANS_DIR, VAL_TSV, mode='val', num_classes=NUM_CLASSES)
+    train_dataset = ADNIDataset(
+            SCANS_DIR, TRAIN_TSV,
+            mode='train',
+            num_classes=NUM_CLASSES,
+            use_augmentation=cfg['data']['use_augmentation'],
+            crop_size=CROP_SIZE,
+            blur_sigma_range=tuple(BLUR_SIGMA)
+    )
+    val_dataset = ADNIDataset(
+            SCANS_DIR, VAL_TSV,
+            mode='val',
+            num_classes=NUM_CLASSES,
+            use_augmentation=False,
+            crop_size=CROP_SIZE)
     
-    # # Solve class imbalance
-    # sample_weights = get_sample_weights(train_dataset)
-    # sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(sample_weights), replacement=True)
     
-    # train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=4)
-    # val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
-    
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS)
+    val_loader = DataLoader(val_dataset, batch_size=VAL_BATCH_SZ, shuffle=False, num_workers=NUM_WORKERS)
     
 
-    model = ClassifierCNN(num_classes=NUM_CLASSES).to(device)
+    model = ClassifierCNN(
+           in_channels = cfg['model']['in_channels'],
+           num_classes = cfg['model']['num_classes'],
+           expansion   = cfg['model']['expansion'],
+           feature_dim = cfg['model']['feature_dim'],
+           nhid        = cfg['model']['nhid'],
+           norm_type   = cfg['model']['norm_type'],
+           crop_size   = cfg['data']['crop_size']
+    ).to(device)
     criterion = nn.CrossEntropyLoss()
     
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
@@ -141,10 +158,13 @@ def main():
     
     best_val_loss = float("+inf")
 
-    csvfile = open('training_log.csv', mode='w', newline='')
-    writer = csv.writer(csvfile)
-    writer.writerow(['epoch', 'train_loss', 'train_acc', 'val_loss', 'val_acc', 'val_auc'])
+    
+    out_csv  = cfg['log_csv']                       # ./saved_model/run1_training_log.csv
+    os.makedirs(os.path.dirname(out_csv), exist_ok=True)
 
+    csvfile  = open(out_csv, 'w', newline='')       
+    writer   = csv.writer(csvfile)
+    writer.writerow(['epoch', 'train_loss', 'train_acc','val_loss', 'val_acc', 'val_auc'])
     for epoch in range(NUM_EPOCHS):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc, val_auc = validate(model, val_loader, criterion, device)
@@ -154,12 +174,14 @@ def main():
         print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%, Val AUC: {val_auc:.4f}')
 
         
-        writer.writerow([epoch+1, train_loss, train_acc, val_loss, val_acc, val_auc])
+        writer.writerow([epoch+1, train_loss, train_acc,
+                 val_loss, val_acc, val_auc])
         csvfile.flush()
         
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save(model.state_dict(), 'best_model.pth')
+            os.makedirs(os.path.dirname(cfg['file_name']), exist_ok=True)
+            torch.save(model.state_dict(), cfg['file_name'] + '.pth')
             print('Saved new best model!')
 
     csvfile.close()

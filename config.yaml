@@ -1,0 +1,34 @@
+# -------------------------------------------------------------------
+data:
+  scans_dir:      ../ADNI_processed              # root folder that contains subjects/
+  train_tsv:      ./participants_Train50.tsv
+  val_tsv:        ./participants_Val50.tsv
+  test_tsv:       ./participants_Test50.tsv
+
+  batch_size:      32                            # training batch size
+  val_batch_size:  64                            # validation batch size
+  test_batch_size: 64                            # test batch size
+  workers:         4                             # DataLoader num_workers (CPU processes)
+
+  crop_size:       96                            # side of the 3-D cube fed to the network
+  blur_sigma:      [0.0, 1.5]                    # uniform σ range for random Gaussian blur
+  use_augmentation: True                         # enables blur + random crop during training
+
+# -------------------------------------------------------------------
+model:
+  in_channels:  1                                # 1 = single-channel T1 image
+  num_classes:  3                                # 3 = CN / MCI / AD
+  expansion:    8                                # width multiplier of convolutional layers
+  feature_dim:  1024                             # dimension of the fc6 embedding
+  nhid:         512                              # neurons in the hidden classifier layer
+  norm_type:    Instance                         # Instance or Batch normalisation
+
+# -------------------------------------------------------------------
+training:
+  epochs:        100                             # maximum number of epochs
+  optimizer:
+    lr:         0.001                            # learning rate of Adam
+  gradient_clip: null                            # e.g. 5.0 to enable, null to disable
+# -------------------------------------------------------------------
+file_name:        ./saved_model/config_model     # saving config_model.pth
+log_csv:          ./saved_model/config_log.csv # CSV with training + val metrics

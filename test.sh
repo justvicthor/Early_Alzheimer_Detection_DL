@@ -16,5 +16,4 @@ source "$WDIR/../conda_base_path/miniconda3/etc/profile.d/conda.sh"
 conda activate /project/home/p200895/conda_base_path/miniconda3/envs/trainEnv
 
 # ============ 2. Training =========
-python train.py --config config.yaml
-
+python test.py --config config.yaml
