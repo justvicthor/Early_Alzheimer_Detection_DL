@@ -11,6 +11,8 @@ import numpy as np
 from torch.utils.data import WeightedRandomSampler
 from sklearn.metrics import roc_auc_score
 import csv
+import time
+import psutil
 
 
 # TODO use argparse for dynamic set
@@ -119,6 +121,11 @@ def validate(model, val_loader, criterion, device):
     return loss, acc, auc
 
 def main():
+    start_time = time.time()
+    process = psutil.Process(os.getpid())
+    cpu_times = []
+    mem_usages = []
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     train_dataset = ADNIDataset(
@@ -151,11 +158,7 @@ def main():
            crop_size   = cfg['data']['crop_size']
     ).to(device)
     criterion = nn.CrossEntropyLoss()
-    
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    # SGD optimizer
-    # optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
-    
     best_val_loss = float("+inf")
 
     
@@ -168,7 +171,6 @@ def main():
     for epoch in range(NUM_EPOCHS):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc, val_auc = validate(model, val_loader, criterion, device)
-
         print(f'Epoch {epoch+1}/{NUM_EPOCHS}:')
         print(f'Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}%')
         print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%, Val AUC: {val_auc:.4f}')
@@ -177,16 +179,24 @@ def main():
         writer.writerow([epoch+1, train_loss, train_acc,
                  val_loss, val_acc, val_auc])
         csvfile.flush()
-        
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             os.makedirs(os.path.dirname(cfg['file_name']), exist_ok=True)
             torch.save(model.state_dict(), cfg['file_name'] + '.pth')
             print('Saved new best model!')
+        # Track CPU and memory usage after each epoch
+        cpu_times.append(process.cpu_percent(interval=None))
+        mem_usages.append(process.memory_info().rss / (1024 * 1024))  # in MB
 
     csvfile.close()
+    total_time = time.time() - start_time
+    avg_cpu = np.mean(cpu_times) if cpu_times else 0
+    max_mem = max(mem_usages) if mem_usages else 0
     print('Training complete. Best validation loss:', best_val_loss)
+    print(f'Total execution time: {total_time:.2f} seconds')
+    print(f'Average CPU usage: {avg_cpu:.2f}%')
+    print(f'Max memory usage: {max_mem:.2f} MB')
 
 
 if __name__ == '__main__':
-    main() 
+    main()

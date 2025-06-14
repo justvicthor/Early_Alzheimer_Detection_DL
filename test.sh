@@ -15,10 +15,6 @@ WDIR=/project/home/p200895/vitto
 source "$WDIR/../conda_base_path/miniconda3/etc/profile.d/conda.sh"
 conda activate /project/home/p200895/conda_base_path/miniconda3/envs/trainEnv
 
-# ============ 2. Training =========
-<<<<<<< HEAD
+# ============ 2. Testing =========
 python test.py --config config.yaml
-=======
-python test.py best_model.pth
 
->>>>>>> 5514b1e (Formatted correctly test output .tsv)
