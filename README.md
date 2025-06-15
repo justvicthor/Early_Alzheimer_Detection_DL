@@ -17,7 +17,7 @@ Our work highlights the value of deep learning in automating and improving the d
 
 - Re-implemented and validated Liu et al.’s 3D CNN model on the ADNI dataset  
 - Switched from instance normalization to batch normalization for improved training stability  
-- Integrated advanced **data augmentation** techniques (rotation, flipping, Gaussian blurring, random cropping)  
+- Integrated  **data augmentation** techniques (Gaussian blurring, random cropping)  
 - Leveraged **MeluXina HPC** for full-scale GPU-based training and evaluation  
 - Used the **Clinica software suite** for standardized MRI preprocessing in BIDS format  
 - Achieved promising classification results with potential for progression prediction
@@ -42,16 +42,11 @@ The model architecture consists of:
 
 ### Dataset: [ADNI](http://adni.loni.usc.edu/)
 
-- **Subject:** 941 S 1311
-- **Group:** MCI
-- **Sex:** M
-- **Age:** 69
-- **Visit:** sc
-- **Modality:** MRI
-- **Description:** MPR; GradWarp; B1 Correction; N3; Scaled
-- **Type:** Processed
-- **Acq Date:** 03/02/2007
-- **Format:** NiFTI
+| session_id | participant_id | sex | original_study | diagnosis | ... |
+|------------|----------------|-----|----------------|-----------|-----|
+| ses-M006   | sub-ADNI052S0671 | F   | ADNI1          | LMCI      | ... |
+| ses-M000   | sub-ADNI109S0967 | M   | ADNI1          | CN        | ... |
+| ses-M000   | sub-ADNI027S0850 | M   | ADNI1          | AD        | ... |
 
 ## ⚙️ Preprocessing
 
@@ -71,9 +66,7 @@ This pipeline ensures data consistency across training, validation, and testing 
 To improve generalization and model robustness, we applied:
 
 - **Gaussian Blurring**: σ ∈ [0, 1.5]  
-- **Random Cropping**: 96×96×96 voxel patches  
-- **Rotation**: Random small-angle rotations  
-- **Flipping**: Horizontal mirror flips  
+- **Random Cropping**: 96×96×96 voxel patches   
 
 Augmentation is performed **on-the-fly** during training.
 
