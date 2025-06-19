@@ -11,12 +11,17 @@ import numpy as np
 from torch.utils.data import WeightedRandomSampler
 from sklearn.metrics import roc_auc_score
 import csv
-import time
-import psutil
+import random
 
-
-# TODO use argparse for dynamic set
-
+# Set random seeds for reproducibility
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(SEED)    
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='config.yaml')
@@ -121,10 +126,6 @@ def validate(model, val_loader, criterion, device):
     return loss, acc, auc
 
 def main():
-    start_time = time.time()
-    process = psutil.Process(os.getpid())
-    cpu_times = []
-    mem_usages = []
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -184,18 +185,9 @@ def main():
             os.makedirs(os.path.dirname(cfg['file_name']), exist_ok=True)
             torch.save(model.state_dict(), cfg['file_name'] + '.pth')
             print('Saved new best model!')
-        # Track CPU and memory usage after each epoch
-        cpu_times.append(process.cpu_percent(interval=None))
-        mem_usages.append(process.memory_info().rss / (1024 * 1024))  # in MB
+       
 
     csvfile.close()
-    total_time = time.time() - start_time
-    avg_cpu = np.mean(cpu_times) if cpu_times else 0
-    max_mem = max(mem_usages) if mem_usages else 0
-    print('Training complete. Best validation loss:', best_val_loss)
-    print(f'Total execution time: {total_time:.2f} seconds')
-    print(f'Average CPU usage: {avg_cpu:.2f}%')
-    print(f'Max memory usage: {max_mem:.2f} MB')
 
 
 if __name__ == '__main__':
