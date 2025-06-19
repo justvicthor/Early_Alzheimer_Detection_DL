@@ -8,6 +8,9 @@ import pandas as pd
 from tqdm import tqdm
 from sklearn.metrics import roc_auc_score
 import random
+import numpy as np
+from sklearn.metrics import balanced_accuracy_score
+
 
 # Set random seeds for reproducibility
 SEED = 42

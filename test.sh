@@ -2,7 +2,7 @@
 #SBATCH -A p200895
 #SBATCH -p gpu
 #SBATCH -q dev
-#SBATCH -J adni_train
+#SBATCH -J adni_test
 #SBATCH -N 1
 #SBATCH -G 1
 #SBATCH --ntasks=64
