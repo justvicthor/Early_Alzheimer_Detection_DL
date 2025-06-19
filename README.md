@@ -2,7 +2,7 @@
 
 ## 🧠 Overview
 
-This project explores the use of **3D Convolutional Neural Networks (3D CNNs)** for early detection of Alzheimer’s Disease (AD) using structural magnetic resonance imaging (sMRI). Inspired by and building upon the work of Liu et al. (2022), we aim to not only replicate but **enhance their deep learning architecture** using high-performance computing (HPC) resources, particularly the **MeluXina Supercomputer**.
+This project explores the use of **3D Convolutional Neural Networks (3D CNNs)** for early detection of Alzheimer’s Disease (AD) using structural magnetic resonance imaging (sMRI). Inspired by and building upon the work of [Liu et al. (2022)](https://www.nature.com/articles/s41598-022-20674-x), we aim to not only replicate but **enhance their deep learning architecture** using high-performance computing (HPC) resources, particularly the **MeluXina Supercomputer**.
 
 The model classifies subjects into three categories:  
 - **Cognitively Normal (CN)**  
@@ -15,12 +15,11 @@ Our work highlights the value of deep learning in automating and improving the d
 
 ## ✅ Contributions
 
-- Re-implemented and validated Liu et al.’s 3D CNN model on the ADNI dataset  
-- Switched from instance normalization to batch normalization for improved training stability  
+- Re-implemented and validated Liu et al.’s 3D CNN model on the ADNI dataset   
+- Used the **Clinica software suite** for standardized MRI preprocessing in BIDS format 
 - Integrated  **data augmentation** techniques (Gaussian blurring, random cropping)  
 - Leveraged **MeluXina HPC** for full-scale GPU-based training and evaluation  
-- Used the **Clinica software suite** for standardized MRI preprocessing in BIDS format  
-- Achieved promising classification results with potential for progression prediction
+- Achieved promising classification results with improved performance on the original paper
 
 ---
 
@@ -31,8 +30,7 @@ Our work highlights the value of deep learning in automating and improving the d
 > *Note: Figure shows a placeholder representation of the deep learning architecture.*
 
 The model architecture consists of:
-- Multiple 3D convolutional blocks with batch normalization and ReLU activations  
-- Dropout for regularization  
+- Multiple 3D convolutional blocks with normalization steps and ReLU activations  
 - Fully connected layers for classification  
 - Cross-entropy loss optimized with Adam  
 
@@ -50,6 +48,8 @@ The model architecture consists of:
 
 ## ⚙️ Preprocessing
 
+To collect the MRI scans and utilize them correctly to train the model please refer to [INSTALL.md](INSTALL.md)
+
 MRI scans were processed using the [Clinica software suite](https://www.clinica.run/):
 
 1. Convert to **BIDS format**
@@ -65,8 +65,8 @@ This pipeline ensures data consistency across training, validation, and testing 
 
 To improve generalization and model robustness, we applied:
 
-- **Gaussian Blurring**: σ ∈ [0, 1.5]  
-- **Random Cropping**: 96×96×96 voxel patches   
+- **Gaussian Blurring** 
+- **Random Cropping**  
 
 Augmentation is performed **on-the-fly** during training.
 
@@ -74,7 +74,7 @@ Augmentation is performed **on-the-fly** during training.
 
 ## 💻 Infrastructure: MeluXina Supercomputer
 
-We transitioned from the CPU-only **Galileo100** to the GPU-enabled **MeluXina** system provided by EuroHPC.
+We worked on the GPU-enabled **MeluXina** system provided by EuroHPC.
 
 ### SSH Access
 
@@ -82,33 +82,36 @@ We transitioned from the CPU-only **Galileo100** to the GPU-enabled **MeluXina**
 # ~/.ssh/config
 Host meluxina
   Hostname login.lxp.lu
-  User u102575
+  User <user_id>
   Port 8822
   IdentityFile ~/.ssh/id_ed25519_mel
   IdentitiesOnly yes
   ForwardAgent no
 ```
-# Connect
+To connect simply type on the command line
 ```bash
 ssh meluxina
 ```
 
 ## 🚀 Benefits of MeluXina
 
-- Maintained 3D CNN complexity  
-- Trained with larger batch sizes  
-- Performed extended hyperparameter search  
-- Conducted robust cross-validation  
+* Large amount of GPU hours available
+
+* Support for large batch sizes
+
+* GPU parallelization capabilities
+
+* Extended memory for ~1TB datasets  
 
 ---
 
 ## 🧪 Neural Network Training
 
 - **Loss Function**: Cross-Entropy  
-- **Optimizer**: Adam + Stochastic Gradient Descent  
-- **Normalization**: BatchNorm (replacing InstanceNorm from original study)  
-- **Regularization**: Dropout + Weight Decay  
-- **Strategy**: Early stopping to prevent overfitting  
+- **Optimizer**: Adam
+- **Normalization**: InstanceNorm / BatchNorm   
+
+Most of the model parameters can be tuned by modifying the [config.yaml](config.yaml) file.
 
 ---
 
@@ -126,31 +129,36 @@ Expected outcomes based on Liu et al.:
 
 ## 🖼️ Visualizations
 
-<p align="center">
-  <img src="media/N.png" width="250" alt="CN" />
-  <img src="media/MCI.png" width="250" alt="MCI" />
-  <img src="media/AD.png" width="250" alt="AD" />
-</p>
 
-*Figure: fMRI of CN, MCI, and AD brains.*
+TODO GradCAM
 
+---
 
 ## 📂 Project Structure
 ```bash
-├── model.py                 # Model pipeline code
-├── dataset.py               # Dataset preparation
-├── train.py                 # Main training script
-├── scripts/
-│   ├── TODO
-├── media/
-│   ├── pipeline.png
-│   ├── N.png
-│   ├── MCI.png
-│   └── AD.png
+├── python/                # Python Model
+│   ├── model.py             # CNN architecture
+│   ├── dataset.py           # Dataset preparation
+│   └── train.py             # Main training script
+├── cpp/                   # C++ Model
+│   ├── model.h              # CNN architecture
+│   ├── dataset.h            # Dataset preparation
+│   └── train.cpp            # Main training script
+├── utils/                 # Other code
+│   ├── gradcam.py           # Visualize classification
+│   ├── test.py              # Test results
+│   └── plot.py              # Show loss
+├── preprocess/            # Preprocessing scripts
+├── data/                  # Diagnosis datasets 
+├── envs/                  # Conda Environments
+├── media/                 # Images/GIFs/...
+├── config.yaml            # Model hyperparameters
+├── INSTALL.md
 └── README.md
+
 ```
 
-##🙏 Acknowledgements
+## 🙏 Acknowledgements
 - **Liu et al.** for their foundational model and research
 
 - **MeluXina Support Team** for infrastructure and consultation
@@ -161,11 +169,11 @@ Expected outcomes based on Liu et al.:
 
 ## 📬 Contacts
 ```bash
-├── **Vittorio Pio Remigio Cozzoli**, Student, Politecnico di Milano
+├── Vittorio Pio Remigio Cozzoli, Student, Politecnico di Milano
 │     ├── vittoriopio.cozzoli@mail.polimi.it
-├── **Tommaso Crippa**, Student, Politecnico di Milano
+├── Tommaso Crippa, Student, Politecnico di Milano
 │     ├── tommaso2.crippa@mail.polimi.it
-├── **Alberto Taddei**, Student, Politecnico di Milano
+├── Alberto Taddei, Student, Politecnico di Milano
 │     ├── alberto4.taddei@mail.polimi.it
 ```
 
