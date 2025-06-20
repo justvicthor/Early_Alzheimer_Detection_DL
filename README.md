@@ -2,6 +2,8 @@
 
 ## 🧠 Overview
 
+![GIF via GradCam](media/CN+MCI+AD.gif)
+
 This project explores the use of **3D Convolutional Neural Networks (3D CNNs)** for early detection of Alzheimer’s Disease (AD) using structural magnetic resonance imaging (sMRI). Inspired by and building upon the work of [Liu et al. (2022)](https://www.nature.com/articles/s41598-022-20674-x), we aim to not only replicate but **enhance their deep learning architecture** using high-performance computing (HPC) resources, particularly the **MeluXina Supercomputer**.
 
 The model classifies subjects into three categories:  
@@ -129,8 +131,21 @@ Expected outcomes based on Liu et al.:
 
 ## 🖼️ Visualizations
 
+We implemented **Grad-CAM** to interpret model decisions and highlight the most discriminative brain regions contributing to each prediction (**CN / MCI / AD**). The visualization pipeline generates **GIF overlays for axial, coronal, and sagittal slices**, color-coded by predicted diagnosis:
 
-TODO GradCAM
+- 🟩 **Green** = CN  
+- 🟨 **Yellow** = MCI  
+- 🟥 **Red** = AD  
+
+Additionally, an **optional hippocampal crop** (based on the AAL atlas) is used to focus on clinically relevant areas, automatically handled via `nilearn`.
+
+To define which part of the Grad-CAM heatmap is considered "active", the script supports multiple **thresholding strategies**, selectable via `--threshold_mode`:
+
+- `pct`: retains the top-N% activations (configurable via `--pct`, e.g., `--pct 60` for 60%)
+- `otsu`: uses Otsu’s adaptive method
+- `std`: keeps voxels with activation > mean + *k* × std (`--std_k 0.5`, etc.)
+
+This interpretability module offers visual insight into model behavior, improves clinical trust, and highlights class-specific decision regions.
 
 ---
 
