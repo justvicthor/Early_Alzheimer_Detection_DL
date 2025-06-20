@@ -1,0 +1,8 @@
+Normalization_type,Train_batch_size,Val_Test_batch_size,Macro_AUC
+Batch,16,32,0.7990
+Batch,24,42,0.7543
+Batch,32,42,0.8190
+Batch,22,42,0.7743
+Batch,36,48,0.8280
+Batch,40,48,0.8370
+Batch,48,48,0.8470
