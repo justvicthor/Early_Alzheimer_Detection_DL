@@ -13,7 +13,6 @@ from sklearn.metrics import roc_auc_score
 import csv
 import random
 
-# Set random seeds for reproducibility
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
@@ -126,7 +125,6 @@ def validate(model, val_loader, criterion, device):
     return loss, acc, auc
 
 def main():
-
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     train_dataset = ADNIDataset(
@@ -159,7 +157,11 @@ def main():
            crop_size   = cfg['data']['crop_size']
     ).to(device)
     criterion = nn.CrossEntropyLoss()
+    
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    # SGD optimizer
+    # optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
+    
     best_val_loss = float("+inf")
 
     
@@ -172,6 +174,7 @@ def main():
     for epoch in range(NUM_EPOCHS):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc, val_auc = validate(model, val_loader, criterion, device)
+
         print(f'Epoch {epoch+1}/{NUM_EPOCHS}:')
         print(f'Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}%')
         print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%, Val AUC: {val_auc:.4f}')
@@ -180,15 +183,16 @@ def main():
         writer.writerow([epoch+1, train_loss, train_acc,
                  val_loss, val_acc, val_auc])
         csvfile.flush()
+        
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             os.makedirs(os.path.dirname(cfg['file_name']), exist_ok=True)
             torch.save(model.state_dict(), cfg['file_name'] + '.pth')
             print('Saved new best model!')
-       
 
     csvfile.close()
+    print('Training complete. Best validation loss:', best_val_loss)
 
 
 if __name__ == '__main__':
-    main()
+    main() 

@@ -1,0 +1,22 @@
+name: gradcamEnv
+channels:
+  - conda-forge
+  - defaults
+  - pytorch
+  - nvidia
+
+dependencies:
+  - python=3.9
+  - pip
+  - numpy
+  - scipy
+  - nibabel
+  - matplotlib
+  - pandas
+  - pyyaml
+  - tqdm
+  - cudatoolkit=11.3      
+  - pytorch=1.12.1       
+  - torchvision=0.13.1
+  - pip:
+    - grad-cam        
