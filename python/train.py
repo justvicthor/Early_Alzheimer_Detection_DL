@@ -24,15 +24,15 @@ torch.backends.cudnn.benchmark = False
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='config.yaml')
-cfg_path = parser.parse_args().config        # <-- nome file
-with open(cfg_path, 'r') as f:               # <-- apertura UNA sola volta
+cfg_path = parser.parse_args().config
+with open(cfg_path, 'r') as f:           
     cfg = yaml.safe_load(f)
 
 SCANS_DIR = cfg['data']['scans_dir']
 TRAIN_TSV = cfg['data']['train_tsv']
 VAL_TSV   = cfg['data']['val_tsv']
 
-# Training params
+# Training parameters
 NUM_CLASSES   = cfg['model']['num_classes']
 BATCH_SIZE    = cfg['data']['batch_size']
 VAL_BATCH_SZ  = cfg['data']['val_batch_size']
@@ -159,13 +159,11 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    # SGD optimizer
-    # optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
     
     best_val_loss = float("+inf")
 
     
-    out_csv  = cfg['log_csv']                       # ./saved_model/run1_training_log.csv
+    out_csv  = cfg['log_csv'] 
     os.makedirs(os.path.dirname(out_csv), exist_ok=True)
 
     csvfile  = open(out_csv, 'w', newline='')       

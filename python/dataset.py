@@ -87,12 +87,11 @@ class ADNIDataset(Dataset):
             image = np.nan_to_num(image)
             image = (image - image.min()) / (image.max() - image.min() + 1e-6)
 
-            # ----------------------- AUGMENTATION -----------------------
+            # ----------------------- Augmentation -----------------------
             if self.mode == 'train' and self.use_augmentation:
                 if np.random.rand() < 0.5:
                     sigma = np.random.uniform(*self.blur_sigma_range)
                     image = scipy.ndimage.gaussian_filter(image, sigma=sigma)
-                # random crop sempre, blur solo col 50 %
                 image = self.randomCrop(image,
                                         self.crop_size,
                                         self.crop_size,
@@ -102,7 +101,6 @@ class ADNIDataset(Dataset):
                                         self.crop_size,
                                         self.crop_size,
                                         self.crop_size)
-            # ------------------------------------------------------------
 
             image = torch.FloatTensor(image).unsqueeze(0)
 

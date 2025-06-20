@@ -13,7 +13,6 @@ class ClassifierCNN(nn.Module):
                  crop_size=96):
         super(ClassifierCNN, self).__init__()
 
-        # ---- Salvo i parametri (utile se un domani li logghi) ----
         self.expansion   = expansion
         self.feature_dim = feature_dim
         self.nhid        = nhid
@@ -21,7 +20,7 @@ class ClassifierCNN(nn.Module):
         self.norm_type   = norm_type
         self.crop_size = crop_size
 
-        # ---- Scelta dinamica della normalizzazione --------------
+        # ---- Dynamically choosing normalization type --------------
         Norm3d = nn.InstanceNorm3d if norm_type.lower() == 'instance' else nn.BatchNorm3d
 
         # ---- Feature extractor ----------------------------------
@@ -49,7 +48,7 @@ class ClassifierCNN(nn.Module):
 
         
         with torch.no_grad():
-            dummy    = torch.zeros(1, in_channels, crop_size, crop_size, crop_size)   # usa lo stesso crop_size
+            dummy    = torch.zeros(1, in_channels, crop_size, crop_size, crop_size)  
             flat_dim = self.conv(dummy).view(1, -1).size(1)
 
         
