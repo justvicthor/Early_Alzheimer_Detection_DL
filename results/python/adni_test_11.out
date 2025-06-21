@@ -1,0 +1,13 @@
+Instance 16 32 lr 0.0016
+Testing:   0%|          | 0/5 [00:00<?, ?it/s]
+Testing:  20%|██        | 1/5 [00:11<00:46, 11.68s/it]
+Testing:  40%|████      | 2/5 [00:11<00:14,  4.92s/it]
+Testing:  60%|██████    | 3/5 [00:12<00:05,  2.74s/it]
+Testing:  80%|████████  | 4/5 [00:12<00:01,  1.72s/it]
+Testing: 100%|██████████| 5/5 [00:12<00:00,  1.19s/it]
+Testing: 100%|██████████| 5/5 [00:12<00:00,  2.49s/it]
+Test Accuracy (simple): 73.28%
+Per-class AUC: [0.92441054 0.81314554 0.84690657]
+Balanced Accuracy     : 73.22%
+Macro-AUC             : 0.8615
+Predictions saved to test_predictions.tsv

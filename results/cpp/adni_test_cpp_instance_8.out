@@ -1,0 +1,143 @@
+#SBATCH --cpus-per-task=8
+
+1. Setting up environment…
+Loading required modules…
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) env/release/2024.1   2) lxp-tools/myquota/0.3.3
+
+The following have been reloaded with a version change:
+  1) zlib/1.3.1-GCCcore-13.3.0 => zlib/1.3.1
+
+Modules loaded.
+2. Defining project variables…
+3. Checking external libraries…
+   NIfTI library already installed.
+   Compiling yaml-cpp…
+CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
+  Compatibility with CMake < 3.5 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /apps/USE/easybuild/release/2024.1/software/GCCcore/13.3.0/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (7.5s)
+-- Generating done (0.3s)
+-- Build files have been written to: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build
+[  2%] Building CXX object CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilder.cpp.o
+[  5%] Building CXX object CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilderadapter.cpp.o
+[  7%] Building CXX object CMakeFiles/yaml-cpp.dir/src/binary.cpp.o
+[ 10%] Building CXX object CMakeFiles/yaml-cpp.dir/src/convert.cpp.o
+[ 13%] Building CXX object CMakeFiles/yaml-cpp.dir/src/depthguard.cpp.o
+[ 15%] Building CXX object CMakeFiles/yaml-cpp.dir/src/directives.cpp.o
+[ 18%] Building CXX object CMakeFiles/yaml-cpp.dir/src/emit.cpp.o
+[ 21%] Building CXX object CMakeFiles/yaml-cpp.dir/src/emitfromevents.cpp.o
+[ 23%] Building CXX object CMakeFiles/yaml-cpp.dir/src/emitter.cpp.o
+[ 26%] Building CXX object CMakeFiles/yaml-cpp.dir/src/emitterstate.cpp.o
+[ 31%] Building CXX object CMakeFiles/yaml-cpp.dir/src/emitterutils.cpp.o
+[ 31%] Building CXX object CMakeFiles/yaml-cpp.dir/src/exceptions.cpp.o
+[ 34%] Building CXX object CMakeFiles/yaml-cpp.dir/src/exp.cpp.o
+[ 36%] Building CXX object CMakeFiles/yaml-cpp.dir/src/memory.cpp.o
+[ 42%] Building CXX object CMakeFiles/yaml-cpp.dir/src/node.cpp.o
+[ 42%] Building CXX object CMakeFiles/yaml-cpp.dir/src/node_data.cpp.o
+[ 50%] Building CXX object CMakeFiles/yaml-cpp.dir/src/nodeevents.cpp.o
+[ 50%] Building CXX object CMakeFiles/yaml-cpp.dir/src/nodebuilder.cpp.o
+[ 50%] Building CXX object CMakeFiles/yaml-cpp.dir/src/null.cpp.o
+[ 55%] Building CXX object CMakeFiles/yaml-cpp.dir/src/ostream_wrapper.cpp.o
+[ 55%] Building CXX object CMakeFiles/yaml-cpp.dir/src/parse.cpp.o
+[ 57%] Building CXX object CMakeFiles/yaml-cpp.dir/src/parser.cpp.o
+[ 63%] Building CXX object CMakeFiles/yaml-cpp.dir/src/regex_yaml.cpp.o
+[ 65%] Building CXX object CMakeFiles/yaml-cpp.dir/src/scanscalar.cpp.o
+[ 65%] Building CXX object CMakeFiles/yaml-cpp.dir/src/scanner.cpp.o
+[ 71%] Building CXX object CMakeFiles/yaml-cpp.dir/src/scantag.cpp.o
+[ 71%] Building CXX object CMakeFiles/yaml-cpp.dir/src/scantoken.cpp.o
+[ 78%] Building CXX object CMakeFiles/yaml-cpp.dir/src/singledocparser.cpp.o
+[ 78%] Building CXX object CMakeFiles/yaml-cpp.dir/src/simplekey.cpp.o
+[ 81%] Building CXX object CMakeFiles/yaml-cpp.dir/src/stream.cpp.o
+[ 81%] Building CXX object CMakeFiles/yaml-cpp.dir/src/tag.cpp.o
+[ 84%] Linking CXX static library libyaml-cpp.a
+[ 84%] Built target yaml-cpp
+[ 86%] Building CXX object util/CMakeFiles/yaml-cpp-sandbox.dir/sandbox.cpp.o
+[ 89%] Building CXX object util/CMakeFiles/yaml-cpp-parse.dir/parse.cpp.o
+[ 92%] Building CXX object util/CMakeFiles/yaml-cpp-read.dir/read.cpp.o
+[ 94%] Linking CXX executable parse
+[ 97%] Linking CXX executable read
+[100%] Linking CXX executable sandbox
+[100%] Built target yaml-cpp-sandbox
+[100%] Built target yaml-cpp-read
+[100%] Built target yaml-cpp-parse
+[ 84%] Built target yaml-cpp
+[ 89%] Built target yaml-cpp-sandbox
+[ 94%] Built target yaml-cpp-parse
+[100%] Built target yaml-cpp-read
+Install the project...
+-- Install configuration: ""
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/libyaml-cpp.a
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/emitter.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/emittermanip.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/null.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/mark.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/traits.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/dll.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/yaml.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/ostream_wrapper.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/binary.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/depthguard.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/noexcept.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/emitfromevents.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/emitterdef.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/eventhandler.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/anchor.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/emit.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/convert.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/ptr.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/impl.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/iterator.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/type.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/node.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/node_iterator.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/impl.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/iterator.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/iterator_fwd.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/node_data.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/node.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/node_ref.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/detail/memory.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/node/parse.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/contrib
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/contrib/anchordict.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/contrib/graphbuilder.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/exceptions.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/parser.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/stlemitter.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/include/yaml-cpp/emitterstyle.h
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/cmake/yaml-cpp/yaml-cpp-targets.cmake
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/cmake/yaml-cpp/yaml-cpp-targets-noconfig.cmake
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/cmake/yaml-cpp/yaml-cpp-config.cmake
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/cmake/yaml-cpp/yaml-cpp-config-version.cmake
+-- Installing: /project/home/p200895/vitto_new_C++/libraries/yaml-cpp-0.8.0/build/install/lib64/pkgconfig/yaml-cpp.pc
+4. Building the main project…
+   Build directory already exists – skipping rebuild.
+Project ready.
+5. Launching the test process…
+Device: cuda
+[test] samples: 131
+[Model] flat_dim = 512
+Loaded model: ./saved_model/config_model.pt
+Test Accuracy (simple) : 76.34 %
+Balanced Accuracy      : 77.84 %
+Macro-AUC              : 0.9008
+Per-class AUC          : 0.9372 0.8831 0.8819
+Predictions saved to test_predictions.tsv

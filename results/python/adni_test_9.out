@@ -1,0 +1,19 @@
+Instance 48 48 lr 0.002 -> Satura la memoria 
+la run 48/48 ha fallito per mancanza di memoria GPU (CUDA out of memory)
+(troppi tensori in parallelo che calcolano i gradienti)
+Traceback (most recent call last):
+  File "/mnt/tier2/project/p200895/repo_alby/test.py", line 113, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/tier2/project/p200895/repo_alby/test.py", line 87, in main
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/project/home/p200895/conda_base_path/miniconda3/envs/trainEnv/lib/python3.13/site-packages/torch/serialization.py", line 1479, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/project/home/p200895/conda_base_path/miniconda3/envs/trainEnv/lib/python3.13/site-packages/torch/serialization.py", line 759, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/project/home/p200895/conda_base_path/miniconda3/envs/trainEnv/lib/python3.13/site-packages/torch/serialization.py", line 740, in __init__
+    super().__init__(open(name, mode))
+                     ~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: './saved_model/cfg_3_best.pth'

@@ -1,0 +1,11 @@
+Batch 24 48 0.0014
+Testing:   0%|          | 0/3 [00:00<?, ?it/s]
+Testing:  33%|███▎      | 1/3 [00:13<00:26, 13.32s/it]
+Testing:  67%|██████▋   | 2/3 [00:13<00:05,  5.63s/it]
+Testing: 100%|██████████| 3/3 [00:13<00:00,  3.13s/it]
+Testing: 100%|██████████| 3/3 [00:13<00:00,  4.61s/it]
+Test Accuracy (simple): 58.02%
+Per-class AUC: [0.81726768 0.6528169  0.79292929]
+Balanced Accuracy     : 54.80%
+Macro-AUC             : 0.7543
+Predictions saved to test_predictions.tsv
