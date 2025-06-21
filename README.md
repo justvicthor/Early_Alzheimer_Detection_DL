@@ -27,7 +27,7 @@ Our work highlights the value of deep learning in automating and improving the d
 
 ## 🏗️ Model Architecture
 
-![Model Architecture Placeholder](media/pipeline.png)
+![Model Architecture Placeholder](media/pipeline_inst_batch.png)
 
 > *Note: Figure shows a placeholder representation of the deep learning architecture.*
 
