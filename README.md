@@ -154,45 +154,45 @@ This interpretability module offers visual insight into model behavior, improves
 ├── python/                  # Python Model
 │   ├── model.py               # CNN architecture
 │   ├── dataset.py             # Dataset preparation
-|   ├── test.py                # Test perfomance script
-|   ├── test.sh                # Shell script for test.py
+│   ├── test.py                # Test perfomance script
+│   ├── test.sh                # Shell script for test.py
 │   ├── train.py               # Main training script 
-|   └── train.sh               # Shell script for train.py
+│   └── train.sh               # Shell script for train.py
 ├── cpp/                     # C++ Model
-|   ├── CMakeLists.txt         # CMake config file
+│   ├── CMakeLists.txt         # CMake config file
 │   ├── model.h                # CNN architecture
 │   ├── dataset.h              # Dataset preparation
-|   ├── config.h               # Parameters config
-|   ├── test.cpp               # Test perfomance script
-|   ├── test.sh                # Shell script for test.cpp
+│   ├── config.h               # Parameters config
+│   ├── test.cpp               # Test perfomance script
+│   ├── test.sh                # Shell script for test.cpp
 │   ├── train.cpp              # Main training script
-|   └── train.sh               # Shell script for train.cpp
+│   └── train.sh               # Shell script for train.cpp
 ├── utils/                   # Other code
 │   ├── plot_metrics.py        # Plot loss, Plot accuracy
-|   ├── plot_metrics.sh        # Shell script for plot_metrics.py
+│   ├── plot_metrics.sh        # Shell script for plot_metrics.py
 │   └── spm_get_doc.m          # MATLAB script for Nipype troubleshooting
 ├── preprocess/              # Preprocessing scripts
-|   ├── run_convert.sh         # ADNI -> BIDS convertion
-|   ├── run_adni_preproc.sh    # T1-volume segmentation on training set
+│   ├── run_convert.sh         # ADNI -> BIDS convertion
+│   ├── run_adni_preproc.sh    # T1-volume segmentation on training set
 │   └── run_adni_valtest.sh    # T1-volume segmentation on val & test set
 ├── data/                    # Diagnosis datasets
 │   ├── participants_Test.tsv  # Subjects in the test set
-|   ├── participants_Train.tsv # Subjects in the train set
+│   ├── participants_Train.tsv # Subjects in the train set
 │   └── participants_Val.tsv   # Subjects in the validation set
 ├── envs/                    # Conda Environments
 │   ├── clinicaEnv.yml         # Conda Env for Clinica
-|   ├── gradcamEnv.yml         # Conda Env for Grad-CAM
+│   ├── gradcamEnv.yml         # Conda Env for Grad-CAM
 │   └── trainEnv.yml           # Conda Env for Training
 ├── gradcam/                 # Grad-CAM visualization
 │   ├── gradcam_out/           # Folder containing Grad-CAM outputs
-|   ├── visualize.py           # Script for Grad-CAM visualization
-|   ├── gradcam_otsu.sh        # Shell script for visualize.py w/Otsu
-|   ├── gradcam_std.sh         # Shell script for visualize.py w/std
-|   └── gradcam_pct.sh         # Shell script for visualize.py w/pct
+│   ├── visualize.py           # Script for Grad-CAM visualization
+│   ├── gradcam_otsu.sh        # Shell script for visualize.py w/Otsu
+│   ├── gradcam_std.sh         # Shell script for visualize.py w/std
+│   └── gradcam_pct.sh         # Shell script for visualize.py w/pct
 ├── results/                 # Output files containing Test results
-|   ├── cpp/                   # Folder containing C++ results
-|   ├── python/                # Folder containing Python results
-|   └── Test_Results.ipynb     # Notebook for model evaluation metrics
+│   ├── cpp/                   # Folder containing C++ results
+│   ├── python/                # Folder containing Python results
+│   └── Test_Results.ipynb     # Notebook for model evaluation metrics
 ├── media/                   # Images/GIFs/...
 ├── config.yaml              # Model hyperparameters
 ├── INSTALL.md
