@@ -123,7 +123,7 @@ Most of the model parameters can be tuned by modifying the [config.yaml](config.
 
 Expected outcomes based on Liu et al.:
 
-- **AUC > xx%** for AD classification  
+- **AUC > 89.21%** for AD classification  
 - Improved performance over ROI-volume/thickness-based models  
 - Demonstrated progression prediction capabilities  
 
