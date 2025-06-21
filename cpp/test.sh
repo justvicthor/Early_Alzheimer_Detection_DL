@@ -2,20 +2,20 @@
 #SBATCH -A p200895
 #SBATCH -p gpu
 #SBATCH -q dev
-#SBATCH -J adni_test_cpp
+#SBATCH -J adni_test_probs_cpp
 #SBATCH -N 1
 #SBATCH -G 1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8          # meno CPU: solo data-loading
-#SBATCH --time=01:00:00             # il test è molto più rapido
+#SBATCH --cpus-per-task=8          # solo data-loading + kernels libtorch
+#SBATCH --time=01:00:00
 #SBATCH --output=%x_%j.out
 
 # ============================================================================
-#  1. ENVIRONMENT SETUP
+# 1. ENVIRONMENT SETUP
 # ============================================================================
 echo "1. Setting up environment…"
-PROJECT_DIR="/path/to/working_dir"
-PROJECT_DIR_MAIN="/path/to/working_dir/cpp_folder"
+PROJECT_DIR="/project/home/p200895/vitto_new_C++/libraries"
+PROJECT_DIR_MAIN="/project/home/p200895/vitto_new_C++"
 
 echo "Loading required modules…"
 module purge
@@ -27,7 +27,7 @@ module load help2man/1.49.3-GCCcore-13.3.0
 echo "Modules loaded."
 
 # ============================================================================
-#  2. VARIABLES AND PATHS
+# 2. VARIABLES AND PATHS
 # ============================================================================
 echo "2. Defining project variables…"
 export NIFTI_DIR="$PROJECT_DIR/nifti_clib-3.0.0"
@@ -39,10 +39,9 @@ export YAMLCPP_INSTALL_DIR="$YAMLCPP_DIR/build/install"
 export LD_LIBRARY_PATH="$NIFTI_INSTALL_DIR/lib:$YAMLCPP_INSTALL_DIR/lib:$LD_LIBRARY_PATH"
 
 # ============================================================================
-#  3. (OPTIONAL) BUILD THIRD-PARTY LIBS         – skipped if already present
+# 3. (OPTIONAL) BUILD THIRD-PARTY LIBS – skipped if present
 # ============================================================================
 echo "3. Checking external libraries…"
-
 if [ ! -f "$NIFTI_INSTALL_DIR/lib/libniftiio.a" ]; then
   echo "   Compiling NIfTI…"
   rm -rf "$NIFTI_DIR/build" && mkdir -p "$NIFTI_DIR/build" && cd "$NIFTI_DIR/build"
@@ -62,11 +61,11 @@ else
 fi
 
 # ============================================================================
-#  4. BUILD PROJECT (if not already built)
+# 4. BUILD PROJECT (rebuild only if test_probs_app is missing)
 # ============================================================================
 echo "4. Building the main project…"
 cd "$PROJECT_DIR_MAIN"
-if [ ! -d build ] || [ ! -f build/test_app ]; then
+if [ ! -d build ] || [ ! -f build/test_probs_app ]; then
   rm -rf build && mkdir build && cd build
   cmake \
     -DCMAKE_PREFIX_PATH="$YAMLCPP_INSTALL_DIR" \
@@ -74,19 +73,20 @@ if [ ! -d build ] || [ ! -f build/test_app ]; then
     -DYAMLCPP_INSTALL_DIR="$YAMLCPP_INSTALL_DIR" \
     -D_GLIBCXX_USE_CXX11_ABI=0 \
     ..
-  make -j$(nproc) test_app
+  make -j$(nproc) test_probs_app
 else
   echo "   Build directory already exists – skipping rebuild."
 fi
 echo "Project ready."
 
 # ============================================================================
-#  5. TEST EXECUTION
+# 5. TEST EXECUTION
 # ============================================================================
 echo "5. Launching the test process…"
-export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK   # condiviso da DataLoader + kernels
 
-cd "$PROJECT_DIR_MAIN/build"      # siamo già qui
-cd ..                             # <-- torni alla root
+cd "$PROJECT_DIR_MAIN"
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build \
-    ./build/test_app ./config.yaml
+    ./build/test_probs_app ./config.yaml
+
+echo "Test finished!"

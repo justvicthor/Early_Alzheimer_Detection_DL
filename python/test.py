@@ -11,7 +11,6 @@ import random
 import numpy as np
 from sklearn.metrics import balanced_accuracy_score
 
-
 # Set random seeds for reproducibility
 SEED = 42
 random.seed(SEED)
@@ -32,9 +31,9 @@ SCANS_DIR    = cfg['data']['scans_dir']
 TEST_TSV     = cfg['data']['test_tsv']
 MODEL_PATH   = cfg['file_name'] + '.pth'       
 NUM_CLASSES  = cfg['model']['num_classes']
-BATCH_SIZE = cfg['data']['test_batch_size']   
-CROP_SIZE = cfg['data']['crop_size']
-NUM_WORKERS = cfg['data']['workers']
+BATCH_SIZE   = cfg['data']['test_batch_size']   
+CROP_SIZE    = cfg['data']['crop_size']
+NUM_WORKERS  = cfg['data']['workers']
 
 def test(model, test_loader, device):
     model.eval()
@@ -45,39 +44,28 @@ def test(model, test_loader, device):
     all_probs = []
     with torch.no_grad():
         for images, labels in tqdm(test_loader, desc='Testing'):
-
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             probs = torch.softmax(outputs, dim=1)
-            
+
             _, predicted = outputs.max(1)
             total += labels.size(0)
             correct += predicted.eq(labels).sum().item()
-            
+
             all_preds.extend(predicted.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
             all_probs.extend(probs.cpu().numpy())
-    
+
     acc = (correct / total) * 100
-    auc = roc_auc_score(
-        all_labels,
-        all_probs,
-        multi_class='ovr',
-        average='macro'
-    )
+    auc = roc_auc_score(all_labels, all_probs, multi_class='ovr', average='macro')
     bal_acc = balanced_accuracy_score(all_labels, all_preds)
-    per_class_auc = roc_auc_score(
-    all_labels,
-    all_probs,
-    multi_class='ovr',
-    average=None 
-    )
+    per_class_auc = roc_auc_score(all_labels, all_probs, multi_class='ovr', average=None)
 
     print(f"Test Accuracy (simple): {acc:.2f}%")
     print("Per-class AUC:", per_class_auc)
     print(f"Balanced Accuracy     : {bal_acc*100:.2f}%")
     print(f"Macro-AUC             : {auc:.4f}")
-    return all_preds, all_labels
+    return all_preds, all_labels, all_probs
 
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -101,25 +89,30 @@ def main():
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.eval()
 
-    preds, labels = test(model, test_loader, device)
+    preds, labels, probs = test(model, test_loader, device)
 
-    # Save predictions in the same format as the input participants file (tab-separated, same columns, plus true_label and predicted_label at the end)
     filename = "test_predictions.tsv"
     df = pd.read_csv(TEST_TSV, sep='\t')
-    map_classes = {0: "CN", 1: "LMCI", 2: "AD"} if NUM_CLASSES == 3 else {0: "CN", 1: "AD"}
-    preds = [map_classes[p] for p in preds]
-    labels = [map_classes[l] for l in labels]
 
-    df['true_label'] = labels
-    df['predicted_label'] = preds
-    # Ensure columns order: all original columns, then true_label, predicted_label
+    map_classes = {0: "CN", 1: "LMCI", 2: "AD"} if NUM_CLASSES == 3 else {0: "CN", 1: "AD"}
+    preds_named = [map_classes[p] for p in preds]
+    labels_named = [map_classes[l] for l in labels]
+
+    df['true_label'] = labels_named
+    df['predicted_label'] = preds_named
+
+    # Add predicted probabilities per class
+    probs_df = pd.DataFrame(probs, columns=[f'prob_{map_classes[i]}' for i in range(NUM_CLASSES)])
+    df = pd.concat([df.reset_index(drop=True), probs_df.reset_index(drop=True)], axis=1)
+
+    # Col. Order
     cols = list(df.columns)
-    # Move true_label and predicted_label to the end if not already
     for col in ['true_label', 'predicted_label']:
         if col in cols:
             cols.remove(col)
             cols.append(col)
     df = df[cols]
+
     df.to_csv(filename, sep='\t', index=False)
     print(f"Predictions saved to {filename}")
 
