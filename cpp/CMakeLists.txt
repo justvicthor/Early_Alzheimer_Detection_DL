@@ -22,7 +22,7 @@ find_path(
      NIFTI_INCLUDE_DIRS
      nifti1_io.h
      PATHS         ${NIFTI_INSTALL_DIR}/include
-     PATH_SUFFIXES nifti          # <-- cerca anche in …/include/nifti
+     PATH_SUFFIXES nifti          
      REQUIRED)
 find_library(NIFTIIO niftiio PATHS ${NIFTI_INSTALL_DIR}/lib REQUIRED)
 find_library(ZNZ     znz     PATHS ${NIFTI_INSTALL_DIR}/lib REQUIRED)

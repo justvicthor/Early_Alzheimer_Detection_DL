@@ -11,9 +11,9 @@
 
 
 # ============ 1. Conda Env =====
-WDIR=/project/home/p200895/vitto
+WDIR=/path/to/wirking/dir
 source "$WDIR/../conda_base_path/miniconda3/etc/profile.d/conda.sh"
-conda activate /project/home/p200895/conda_base_path/miniconda3/envs/trainEnv
+conda activate $WDIR/conda_base_path/miniconda3/envs/trainEnv
 
 # ============ 2. Training =========
 python train.py --config ../config.yaml

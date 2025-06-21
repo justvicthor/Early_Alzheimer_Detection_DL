@@ -14,8 +14,8 @@
 #  1. ENVIRONMENT SETUP
 # ============================================================================
 echo "1. Setting up environment..."
-PROJECT_DIR="/path/to/working_dir"
-PROJECT_DIR_MAIN="/path/to/working_dir/cpp_folder"
+PROJECT_DIR="/path/to/libraries"
+PROJECT_DIR_MAIN="/path/to/working_dir"
 
 echo "Loading required modules..."
 module purge
@@ -106,6 +106,6 @@ fi
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-./build/train_app ./config.yaml
+./build/train_app ../config.yaml
 
 echo "Training finished!"

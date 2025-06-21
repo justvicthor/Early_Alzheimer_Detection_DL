@@ -1,9 +1,9 @@
 # -------------------------------------------------------------------
 data:
-  scans_dir:      ../../ADNI_processed              # root folder that contains subjects/
-  train_tsv:      ../data/participants_Train.tsv
-  val_tsv:        ../data/participants_Val.tsv
-  test_tsv:       ../data/participants_Test.tsv
+  scans_dir:      ./ADNI_processed              # root folder that contains subjects/
+  train_tsv:      ./data/participants_Train.tsv
+  val_tsv:        ./data/participants_Val.tsv
+  test_tsv:       ./data/participants_Test.tsv
 
   batch_size:      32                            # training batch size
   val_batch_size:  64                            # validation batch size

@@ -14,8 +14,8 @@
 # 1. ENVIRONMENT SETUP
 # ============================================================================
 echo "1. Setting up environment…"
-PROJECT_DIR="/project/home/p200895/vitto_new_C++/libraries"
-PROJECT_DIR_MAIN="/project/home/p200895/vitto_new_C++"
+PROJECT_DIR="/path/to/libraries/"
+PROJECT_DIR_MAIN="/path/to/working_dir"
 
 echo "Loading required modules…"
 module purge
@@ -87,6 +87,6 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK   # condiviso da DataLoader + kernel
 
 cd "$PROJECT_DIR_MAIN"
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build \
-    ./build/test_probs_app ./config.yaml
+    ./build/test_probs_app ../config.yaml
 
 echo "Test finished!"

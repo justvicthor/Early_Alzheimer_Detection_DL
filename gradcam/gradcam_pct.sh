@@ -11,20 +11,14 @@
 #SBATCH --output=%x_%j.out
 
 echo "INFO: Loading Conda..."
-WDIR=/project/home/p200895/
+WDIR=/path/to/working/dir/
 CONDA_BASE_PATH="$WDIR/conda_base_path/miniconda3"
 source "$CONDA_BASE_PATH/etc/profile.d/conda.sh"
 
 echo "INFO: Activating adni-gradcam environment..."
 conda activate adni-gradcam
 
-#SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI002S0295/ses-M000/t1/spm/segmentation/normalized_space/sub-ADNI002S0295_ses-M000_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_CN
-#SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI002S0413/ses-M000/t1/spm/segmentation/normalized_space/sub-ADNI002S0413_ses-M000_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_CN
-#SCAN_PATH_AD="/project/home/p200895/ADNI_processed/subjects/sub-ADNI130S0956/ses-M006/t1/spm/segmentation/normalized_space/sub-ADNI130S0956_ses-M006_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_AD1
-#SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI024S1307/ses-M000/t1/spm/segmentation/normalized_space/sub-ADNI024S1307_ses-M000_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_MCI2
-#SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI021S0753/ses-M006/t1/spm/segmentation/normalized_space/sub-ADNI021S0753_ses-M006_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_AD2
-#SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI031S0830/ses-M006/t1/spm/segmentation/normalized_space/sub-ADNI031S0830_ses-M006_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_MCI3
-SCAN_PATH="/project/home/p200895/ADNI_processed/subjects/sub-ADNI027S0256/ses-M012/t1/spm/segmentation/normalized_space/sub-ADNI027S0256_ses-M012_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_MCI4
+SCAN_PATH="$WDIR/ADNI_processed/subjects/sub-ADNI027S0256/ses-M012/t1/spm/segmentation/normalized_space/sub-ADNI027S0256_ses-M012_space-Ixi549Space_T1w.nii.gz" #SCAN_PATH_MCI4
 
 OUTPUT_DIR="./gradcam_out"
 
