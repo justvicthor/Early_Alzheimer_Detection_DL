@@ -219,4 +219,13 @@ This interpretability module offers visual insight into model behavior, improves
 │     ├── alberto4.taddei@mail.polimi.it
 ```
 
+## License and Ethical Use Notice
 
+All rights reserved.  
+This repository contains research code developed for academic purposes only.  
+Images and medical data used in this project are derived from publicly available datasets (ADNI), that are not linked to any identifiable individuals.  
+
+Nevertheless, as the subject matter involves sensitive neuroimaging data, we kindly ask users to treat visual outputs with scientific respect.  
+Any clinical, diagnostic, or commercial usage of this code or its outputs is strictly prohibited without prior written permission.
+
+If you are a researcher or instructor and wish to reuse this material for non-commercial academic use, please contact the authors.
