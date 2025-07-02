@@ -89,7 +89,7 @@ int main(int argc,char* argv[]) {
         if (vl<best){
             best=vl;
             fs::create_directories(fs::path(cfg.file_name).parent_path());
-            torch::save(net, cfg.file_name+".pt");
+            torch::save(net, cfg.file_name+".pth");
             std::cout<<"   ✔ best model saved\n";
         }
     }

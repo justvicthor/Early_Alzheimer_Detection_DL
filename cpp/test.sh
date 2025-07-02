@@ -2,11 +2,11 @@
 #SBATCH -A p200895
 #SBATCH -p gpu
 #SBATCH -q dev
-#SBATCH -J adni_test_probs_cpp
+#SBATCH -J adni_test_cpp
 #SBATCH -N 1
 #SBATCH -G 1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8          # solo data-loading + kernels libtorch
+#SBATCH --cpus-per-task=64          # solo data-loading + kernels libtorch
 #SBATCH --time=01:00:00
 #SBATCH --output=%x_%j.out
 
@@ -61,11 +61,11 @@ else
 fi
 
 # ============================================================================
-# 4. BUILD PROJECT (rebuild only if test_probs_app is missing)
+# 4. BUILD PROJECT (rebuild only if test_app is missing)
 # ============================================================================
 echo "4. Building the main project…"
 cd "$PROJECT_DIR_MAIN"
-if [ ! -d build ] || [ ! -f build/test_probs_app ]; then
+if [ ! -d build ] || [ ! -f build/test_app ]; then
   rm -rf build && mkdir build && cd build
   cmake \
     -DCMAKE_PREFIX_PATH="$YAMLCPP_INSTALL_DIR" \
@@ -73,7 +73,7 @@ if [ ! -d build ] || [ ! -f build/test_probs_app ]; then
     -DYAMLCPP_INSTALL_DIR="$YAMLCPP_INSTALL_DIR" \
     -D_GLIBCXX_USE_CXX11_ABI=0 \
     ..
-  make -j$(nproc) test_probs_app
+  make -j$(nproc) test_app
 else
   echo "   Build directory already exists – skipping rebuild."
 fi
@@ -87,6 +87,6 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK   # condiviso da DataLoader + kernel
 
 cd "$PROJECT_DIR_MAIN"
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build \
-    ./build/test_probs_app ../config.yaml
+    ./build/test_app ../config.yaml
 
 echo "Test finished!"

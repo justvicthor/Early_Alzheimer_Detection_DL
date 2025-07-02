@@ -5,9 +5,9 @@
 #SBATCH -J adni_train
 #SBATCH -N 1
 #SBATCH -G 1
-#SBATCH --ntasks=8
+#SBATCH --ntasks=64
 #SBATCH --time=03:00:00
-#SBATCH --output=%x_%j_8.out
+#SBATCH --output=%x_%j.out
 
 
 # ============ 1. Conda Env =====

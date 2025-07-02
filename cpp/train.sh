@@ -6,7 +6,7 @@
 #SBATCH -N 1
 #SBATCH -G 1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=64
 #SBATCH --time=03:00:00
 #SBATCH --output=%x_%j.out
 

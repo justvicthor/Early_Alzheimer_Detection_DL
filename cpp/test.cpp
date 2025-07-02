@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
         torch::data::DataLoaderOptions().batch_size(cfg.test_batch_sz).workers(cfg.workers));
 
     ClassifierCNN net(cfg); net->to(dev);
-    const std::string model_path = cfg.file_name + ".pt";
+    const std::string model_path = cfg.file_name + ".pth";
     torch::load(net, model_path, dev);
     net->eval();
     std::cout << "Loaded model: " << model_path << "\n";
